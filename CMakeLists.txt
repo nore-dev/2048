@@ -3,7 +3,7 @@ project(super2048)
 
 # Dependencies
 
-
+set(CMAKE_PREFIX_PATH "C:/raylib64")
 find_library(RAYLIB raylib "${CMAKE_PREFIX_PATH}/lib")
 
 # target_include_directories()

@@ -5,13 +5,12 @@
 #include <stdint.h>
 #include <vector>
 #include <string>
+#include <memory>
 
 enum Direction
 {
-    LEFT,
-    RIGHT,
-    UP,
-    DOWN
+    ROW,
+    COLUMN
 };
 
 static const uint8_t EMPTY = 0;
@@ -24,7 +23,7 @@ struct Vec2
 };
 
 typedef uint16_t Score;
-typedef uint8_t Tile;
+typedef uint16_t Tile;
 typedef Tile Grid[GRID_SIZE][GRID_SIZE];
 
 class Game
@@ -38,17 +37,27 @@ public:
     }
 
     void drawGrid(uint8_t tileSize);
-    void slide(Direction direction);
+    void slide(Direction direction, bool flip = false);
 
     bool isGameOver();
 
     Vec2 getNextTile();
+
+    void swap(Tile *a, Tile *b)
+    {
+        Tile temp = *a;
+        *a = *b;
+        *b = temp;
+    }
 
     inline Score getScore() const { return m_Score; }
 
 private:
     Grid m_Grid = {0};
     Score m_Score = 0;
+
+    void flipGrid();
+    void rotateGrid();
 };
 
 #endif

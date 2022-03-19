@@ -7,7 +7,7 @@ int main(void)
     const int screenWidth = 480;
     const int screenHeight = 640;
 
-    InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
+    InitWindow(screenWidth, screenHeight, "2048");
 
     Game game = Game();
 
@@ -15,12 +15,24 @@ int main(void)
 
     while (!WindowShouldClose())
     {
+        if (IsKeyPressed(KEY_A))
+            game.slide(COLUMN);
+
+        if (IsKeyPressed(KEY_D))
+            game.slide(COLUMN, true);
+
+        if (IsKeyPressed(KEY_S))
+            game.slide(ROW, true);
+
+        if (IsKeyPressed(KEY_W))
+            game.slide(ROW);
+
         BeginDrawing();
 
         ClearBackground(RAYWHITE);
 
         DrawText("2048", 100, 60, 60, GRAY);
-        DrawText(TextFormat("Score: %d", game.getScore()), 300, 60, 40, GRAY);
+        DrawText(TextFormat("Score: %d", game.getScore()), 100, 0, 40, GRAY);
 
         game.drawGrid(120);
 
