@@ -16,6 +16,8 @@ enum Direction
 static const uint8_t EMPTY = 0;
 static const uint8_t GRID_SIZE = 4;
 
+static const uint16_t DEFAULT_TILE_VALUE = 2;
+
 struct Vec2
 {
     uint8_t x;
@@ -29,12 +31,7 @@ typedef Tile Grid[GRID_SIZE][GRID_SIZE];
 class Game
 {
 public:
-    Game()
-    {
-        Vec2 nextTile = getNextTile();
-
-        m_Grid[nextTile.y][nextTile.x] = 2;
-    }
+    Game() { generateNewTile(); }
 
     void drawGrid(uint8_t tileSize);
     void slide(Direction direction, bool flip = false);
@@ -42,6 +39,8 @@ public:
     bool isGameOver();
 
     Vec2 getNextTile();
+
+    void generateNewTile();
 
     void swap(Tile *a, Tile *b)
     {

@@ -28,6 +28,16 @@ Vec2 Game::getNextTile()
     return available_tiles.at(GetRandomValue(0, available_tiles.size() - 1));
 }
 
+void Game::generateNewTile()
+{
+    Vec2 nextTile = getNextTile();
+
+    m_Grid[nextTile.y][nextTile.x] = DEFAULT_TILE_VALUE;
+
+    if (GetRandomValue(0, 10) > 8)
+        m_Grid[nextTile.y][nextTile.x] += DEFAULT_TILE_VALUE;
+}
+
 void Game::flipGrid()
 {
     for (uint8_t y = 0; y < GRID_SIZE; y++)
@@ -44,8 +54,6 @@ void Game::rotateGrid()
             tempGrid[x][y] = m_Grid[y][x];
 
     std::copy(&tempGrid[0][0], &tempGrid[0][0] + GRID_SIZE * GRID_SIZE, &m_Grid[0][0]);
-
-    // flipGrid();
 }
 
 void Game::slide(Direction direction, bool flip)
@@ -89,6 +97,7 @@ void Game::slide(Direction direction, bool flip)
 
     if (flip)
         flipGrid();
+
     if (direction == ROW)
     {
         rotateGrid();
@@ -97,9 +106,5 @@ void Game::slide(Direction direction, bool flip)
     }
 
     if (tileMoved)
-    {
-        Vec2 nextTile = getNextTile();
-
-        m_Grid[nextTile.y][nextTile.x] = 2;
-    }
+        generateNewTile();
 }
