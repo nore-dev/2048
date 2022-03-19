@@ -56,6 +56,8 @@ void Game::slide(Direction direction, bool flip)
     if (flip)
         flipGrid();
 
+    bool tileMoved = false;
+
     for (uint8_t y = 0; y < GRID_SIZE; y++)
     {
         uint8_t saved_index = 0;
@@ -77,6 +79,9 @@ void Game::slide(Direction direction, bool flip)
             else
                 m_Grid[y][saved_index + 1] = current_tile;
 
+            if (!tileMoved && m_Grid[y][x] == EMPTY)
+                tileMoved = true;
+
             if (m_Grid[y][saved_index] != EMPTY && m_Grid[y][saved_index] != current_tile)
                 saved_index++;
         }
@@ -91,7 +96,10 @@ void Game::slide(Direction direction, bool flip)
         rotateGrid();
     }
 
-    Vec2 nextTile = getNextTile();
+    if (tileMoved)
+    {
+        Vec2 nextTile = getNextTile();
 
-    m_Grid[nextTile.y][nextTile.x] = 2;
+        m_Grid[nextTile.y][nextTile.x] = 2;
+    }
 }
