@@ -56,6 +56,33 @@ void Game::rotateGrid()
     std::copy(&tempGrid[0][0], &tempGrid[0][0] + GRID_SIZE * GRID_SIZE, &m_Grid[0][0]);
 }
 
+bool Game::isTileCanMove(uint8_t x, uint8_t y)
+{
+    for (int8_t yOffset = -1; yOffset <= 1; yOffset++)
+        for (int8_t xOffset = -1; xOffset <= 1; xOffset++)
+        {
+            if (!isInBounds(x, xOffset) || !isInBounds(y, yOffset) || !(xOffset == 0 ^ yOffset == 0))
+                continue;
+
+            Tile currentTile = m_Grid[y + yOffset][x + xOffset];
+
+            if (currentTile == EMPTY || currentTile == m_Grid[y][x])
+                return true;
+        }
+
+    return false;
+}
+
+bool Game::isGameOver()
+{
+    for (uint8_t y = 0; y < GRID_SIZE; y++)
+        for (uint8_t x = 0; x < GRID_SIZE; x++)
+            if (isTileCanMove(x, y))
+                return false;
+
+    return true;
+}
+
 void Game::slide(Direction direction, bool flip)
 {
     if (direction == ROW)

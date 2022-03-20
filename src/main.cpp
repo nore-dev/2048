@@ -32,7 +32,11 @@ int main(void)
         ClearBackground(RAYWHITE);
 
         DrawText("2048", 100, 60, 60, GRAY);
-        DrawText(TextFormat("Score: %d", game.getScore()), 100, 0, 40, GRAY);
+
+        if (game.isGameOver())
+            DrawText("Game over", 100, 0, 40, GRAY);
+        else
+            DrawText(TextFormat("Score: %d", game.getScore()), 100, 0, 40, GRAY);
 
         game.drawGrid(120);
 

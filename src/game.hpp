@@ -6,6 +6,7 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include <array>
 
 enum Direction
 {
@@ -57,6 +58,10 @@ private:
 
     void flipGrid();
     void rotateGrid();
+
+    inline bool isInBounds(uint8_t a, uint8_t b) { return (a + b >= 0 && a + b < GRID_SIZE); }
+
+    bool isTileCanMove(uint8_t x, uint8_t y);
 };
 
 #endif
