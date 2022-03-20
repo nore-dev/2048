@@ -1,14 +1,44 @@
 #include "game.hpp"
 
-void Game::drawGrid(uint8_t tileSize)
+Color Game::getColor(Tile tile)
 {
-    for (int x = 0; x < GRID_SIZE; x++)
-        for (int y = 0; y < GRID_SIZE; y++)
+    if (tile == EMPTY)
+        return COLOR_TILE_EMPTY;
+
+    int index = log(tile) / log(DEFAULT_TILE_VALUE) - 1;
+
+    if (index >= TileColors.size())
+        return TileColors.at(TileColors.size() - 1);
+
+    return TileColors.at(index);
+}
+
+void Game::drawGrid(int tileSize)
+{
+
+    int margin = 15;
+
+    Vec2 offset = {
+        (GetScreenWidth() - tileSize * GRID_SIZE) / 2,
+        160};
+
+    DrawRectangle(offset.x - margin, offset.y - margin, tileSize * GRID_SIZE + margin, tileSize * GRID_SIZE + margin, Color{187, 173, 160, 255});
+
+    for (int y = 0; y < GRID_SIZE; y++)
+        for (int x = 0; x < GRID_SIZE; x++)
         {
-            DrawRectangle(x * tileSize, 120 + y * tileSize, tileSize - 20, tileSize - 20, LIGHTGRAY);
+            Tile currentTile = m_Grid[y][x];
+            Color color = getColor(currentTile);
+
+            DrawRectangle(offset.x + x * tileSize, offset.y + y * tileSize, tileSize - margin, tileSize - margin, color);
+
+            const char *text = std::to_string(m_Grid[y][x]).c_str();
+            float fontSize = (currentTile > 64) ? ((currentTile > 512) ? 30 : 40) : 60;
+
+            Vector2 textDim = MeasureTextEx(GetFontDefault(), text, fontSize, .0f);
 
             if (m_Grid[y][x] != EMPTY)
-                DrawText(std::to_string(m_Grid[y][x]).c_str(), x * tileSize, 120 + y * tileSize, 60, BLACK);
+                DrawText(text, offset.x + (tileSize - margin - textDim.x) / 2 + x * tileSize, (tileSize - margin - textDim.y) / 2 + offset.y + y * tileSize, fontSize, currentTile > 4 ? WHITE : GRAY);
         }
 }
 
@@ -56,7 +86,7 @@ void Game::rotateGrid()
     std::copy(&tempGrid[0][0], &tempGrid[0][0] + GRID_SIZE * GRID_SIZE, &m_Grid[0][0]);
 }
 
-bool Game::isTileCanMove(uint8_t x, uint8_t y)
+bool Game::canTileMove(uint8_t x, uint8_t y)
 {
     for (int8_t yOffset = -1; yOffset <= 1; yOffset++)
         for (int8_t xOffset = -1; xOffset <= 1; xOffset++)
@@ -77,7 +107,7 @@ bool Game::isGameOver()
 {
     for (uint8_t y = 0; y < GRID_SIZE; y++)
         for (uint8_t x = 0; x < GRID_SIZE; x++)
-            if (isTileCanMove(x, y))
+            if (canTileMove(x, y))
                 return false;
 
     return true;

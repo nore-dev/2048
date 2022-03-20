@@ -31,14 +31,16 @@ int main(void)
 
         ClearBackground(RAYWHITE);
 
-        DrawText("2048", 100, 60, 60, GRAY);
+        DrawText("2048", 30, 60, 60, GRAY);
+
+        const char *text = TextFormat("Score: %d", game.getScore());
 
         if (game.isGameOver())
-            DrawText("Game over", 100, 0, 40, GRAY);
-        else
-            DrawText(TextFormat("Score: %d", game.getScore()), 100, 0, 40, GRAY);
+            text = "Game Over!";
 
-        game.drawGrid(120);
+        DrawText(text, 200, 70, 40, GRAY);
+
+        game.drawGrid(100);
 
         EndDrawing();
     }

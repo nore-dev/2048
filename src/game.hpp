@@ -1,40 +1,21 @@
-#ifndef __GAME_H__
-#define __GAME_H__
+#ifndef __GAME_HPP__
+#define __GAME_HPP__
 
 #include "raylib.h"
+
 #include <stdint.h>
 #include <vector>
 #include <string>
 #include <memory>
-#include <array>
+#include <cmath>
 
-enum Direction
-{
-    ROW,
-    COLUMN
-};
-
-static const uint8_t EMPTY = 0;
-static const uint8_t GRID_SIZE = 4;
-
-static const uint16_t DEFAULT_TILE_VALUE = 2;
-
-struct Vec2
-{
-    uint8_t x;
-    uint8_t y;
-};
-
-typedef uint16_t Score;
-typedef uint16_t Tile;
-typedef Tile Grid[GRID_SIZE][GRID_SIZE];
-
+#include "types.hpp"
 class Game
 {
 public:
     Game() { generateNewTile(); }
 
-    void drawGrid(uint8_t tileSize);
+    void drawGrid(int tileSize);
     void slide(Direction direction, bool flip = false);
 
     bool isGameOver();
@@ -61,7 +42,9 @@ private:
 
     inline bool isInBounds(uint8_t a, uint8_t b) { return (a + b >= 0 && a + b < GRID_SIZE); }
 
-    bool isTileCanMove(uint8_t x, uint8_t y);
+    bool canTileMove(uint8_t x, uint8_t y);
+
+    Color getColor(Tile tile);
 };
 
 #endif
