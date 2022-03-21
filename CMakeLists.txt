@@ -10,12 +10,19 @@ find_library(RAYLIB raylib "${CMAKE_PREFIX_PATH}/lib")
 # Our Project
 file(GLOB_RECURSE PROJECT_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/src/*.cpp") 
 
+
+
 add_executable(${PROJECT_NAME})
 target_sources(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCES})
 
 target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_PREFIX_PATH}/include")
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${RAYLIB})
+
+
+if (CMAKE_BUILD_TYPE STREQUAL "Release")
+    target_link_options(${PROJECT_NAME} PRIVATE -mwindows)
+endif()
 
 if (WIN32)
     target_link_libraries(${PROJECT_NAME} PRIVATE winmm.lib)

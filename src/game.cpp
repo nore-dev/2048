@@ -1,5 +1,12 @@
 #include "game.hpp"
 
+void Game::reset()
+{
+    std::fill_n(&m_Grid[0][0], GRID_SIZE * GRID_SIZE, EMPTY);
+    m_Score = 0;
+    generateNewTile();
+}
+
 Color Game::getColor(Tile tile)
 {
     if (tile == EMPTY)
@@ -13,7 +20,7 @@ Color Game::getColor(Tile tile)
     return TileColors.at(index);
 }
 
-void Game::drawGrid(int tileSize)
+void Game::drawGrid(int tileSize, int opacity)
 {
 
     int margin = 15;
@@ -22,13 +29,14 @@ void Game::drawGrid(int tileSize)
         (GetScreenWidth() - tileSize * GRID_SIZE) / 2,
         160};
 
-    DrawRectangle(offset.x - margin, offset.y - margin, tileSize * GRID_SIZE + margin, tileSize * GRID_SIZE + margin, Color{187, 173, 160, 255});
+    DrawRectangle(offset.x - margin, offset.y - margin, tileSize * GRID_SIZE + margin, tileSize * GRID_SIZE + margin, Color{187, 173, 160, opacity});
 
     for (int y = 0; y < GRID_SIZE; y++)
         for (int x = 0; x < GRID_SIZE; x++)
         {
             Tile currentTile = m_Grid[y][x];
             Color color = getColor(currentTile);
+            color.a = opacity;
 
             DrawRectangle(offset.x + x * tileSize, offset.y + y * tileSize, tileSize - margin, tileSize - margin, color);
 
@@ -38,7 +46,7 @@ void Game::drawGrid(int tileSize)
             Vector2 textDim = MeasureTextEx(GetFontDefault(), text, fontSize, .0f);
 
             if (m_Grid[y][x] != EMPTY)
-                DrawText(text, offset.x + (tileSize - margin - textDim.x) / 2 + x * tileSize, (tileSize - margin - textDim.y) / 2 + offset.y + y * tileSize, fontSize, currentTile > 4 ? WHITE : GRAY);
+                DrawText(text, offset.x + (tileSize - margin - textDim.x) / 2 + x * tileSize, (tileSize - margin - textDim.y) / 2 + offset.y + y * tileSize, fontSize, currentTile > 4 ? WHITE : Color{130, 130, 130, opacity});
         }
 }
 

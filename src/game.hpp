@@ -8,6 +8,7 @@
 #include <string>
 #include <memory>
 #include <cmath>
+#include <algorithm>
 
 #include "types.hpp"
 class Game
@@ -15,7 +16,9 @@ class Game
 public:
     Game() { generateNewTile(); }
 
-    void drawGrid(int tileSize);
+    void reset();
+
+    void drawGrid(int tileSize, int opacity);
     void slide(Direction direction, bool flip = false);
 
     bool isGameOver();
